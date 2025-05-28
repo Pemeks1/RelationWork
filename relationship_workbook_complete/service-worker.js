@@ -1,0 +1,1 @@
+// Service Worker: basic PWA offline support
