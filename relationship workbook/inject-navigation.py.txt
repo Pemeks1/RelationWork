@@ -1,0 +1,95 @@
+import os
+
+files = [f for f in os.listdir() if f.endswith(".html") and f != "index.html"]
+
+files_ordered = [
+    "index.html",
+    "introduction.html",
+    "engagement-guidelines.html",
+    "guiding-exploration.html",
+    "measurement-scales.html",
+    "communication.html",
+    "trust-honesty.html",
+    "quality-time.html",
+    "conflict-resolution.html",
+    "affection-intimacy.html",
+    "support-encouragement.html",
+    "shared-values-goals.html",
+    "forgiveness.html",
+    "gratitude-appreciation.html",
+    "personal-growth.html",
+    "romantic-gestures.html",
+    "sexual-compatibility.html",
+    "boundaries.html",
+    "family-friends.html",
+    "fun-adventure.html",
+    "section1-summary.html",
+    "childhood-blueprint.html",
+    "past-relationships.html",
+    "body-wisdom.html",
+    "core-values.html",
+    "section2-summary.html",
+    "clear-boundaries.html",
+    "navigating-desire.html",
+    "transforming-conflict.html",
+    "mutual-support.html",
+    "section3-summary.html",
+    "visioning-future.html",
+    "continuous-dance.html",
+    "rituals-of-connection.html",
+    "section4-summary.html",
+    "conclusion.html"
+]
+
+style_block = """
+<style>
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1em;
+  border-top: 1px solid #ccc;
+  margin-top: 2em;
+}
+.navigation a {
+  background: #e3f2fd;
+  padding: 0.6em 1em;
+  border-radius: 0.5em;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+}
+.navigation a:hover {
+  background: #d0e9ff;
+}
+</style>
+"""
+
+for file in files_ordered:
+    if not os.path.exists(file):
+        continue
+
+    with open(file, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    if '<div class="navigation">' in content or 'navigation-injector.js' in content:
+        continue  # Already injected
+
+    idx = files_ordered.index(file)
+    prev = files_ordered[idx - 1] if idx > 0 else ""
+    next_ = files_ordered[idx + 1] if idx < len(files_ordered) - 1 else ""
+
+    nav_html = '<div class="navigation">'
+    if prev: nav_html += f'<a href="{prev}">← Back</a>'
+    nav_html += f'<a href="index.html">🏠 Home</a>'
+    if next_: nav_html += f'<a href="{next_}">Next →</a>'
+    nav_html += '</div>'
+
+    content = content.replace("</main>", nav_html + "\n</main>")
+
+    if style_block not in content:
+        content = content.replace("</style>", style_block + "\n</style>")
+
+    with open(file, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+print("✅ Navigation injected into all HTML files.")
